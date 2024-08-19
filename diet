@@ -1,0 +1,65 @@
+import json
+import os
+
+# Define the filename to save data
+DATA_FILE = 'diet_tracker.json'
+
+# Function to load data from a JSON file
+def load_data():
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, 'r') as file:
+            return json.load(file)
+    return {'meals': []}
+
+# Function to save data to a JSON file
+def save_data(data):
+    with open(DATA_FILE, 'w') as file:
+        json.dump(data, file, indent=4)
+
+# Function to add a meal
+def add_meal():
+    meal_name = input("Enter the meal name: ")
+    try:
+        calories = int(input("Enter the number of calories: "))
+    except ValueError:
+        print("Please enter a valid number for calories.")
+        return
+    meal = {'name': meal_name, 'calories': calories}
+    data = load_data()
+    data['meals'].append(meal)
+    save_data(data)
+    print("Meal added successfully!")
+
+# Function to display all meals and their total calories
+def view_meals():
+    data = load_data()
+    if not data['meals']:
+        print("No meals recorded.")
+        return
+    total_calories = 0
+    for meal in data['meals']:
+        print(f"Meal: {meal['name']}, Calories: {meal['calories']}")
+        total_calories += meal['calories']
+    print(f"Total calories: {total_calories}")
+
+# Main function to run the application
+def main():
+    while True:
+        print("\nDiet Tracker Application")
+        print("1. Add a meal")
+        print("2. View meals")
+        print("3. Exit")
+        
+        choice = input("Choose an option (1/2/3): ")
+        if choice == '1':
+            add_meal()
+        elif choice == '2':
+            view_meals()
+        elif choice == '3':
+            print("Exiting...")
+            break
+        else:
+            print("Invalid choice, please try again.")
+
+if __name__ == "__main__":
+    main()
